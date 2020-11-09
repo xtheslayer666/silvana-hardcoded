@@ -6,7 +6,7 @@ let alexaVerifier = require('alexa-verifier');
 var isFirstTime = true;
 const SKILL_NAME = 'Silvana Öffnungszeiten';
 const GET_OH_MESSAGE = "Das Silvana ist heute ";
-const HELP_MESSAGE = 'Alles gut bei Ihnen? Wie kann ich Ihnen weiterhelfen?';
+const HELP_MESSAGE = 'Sie können von mir die heutige Öffnungszeit des Silvana Hallenbads erfahren.';
 const HELP_REPROMPT = 'Wie kann ich Ihnen weiterhelfen?';
 const STOP_MESSAGE = 'Super! Tschüss schönen Feierabend!';
 const MORE_MESSAGE = ' Haben Sie`s verstanden?'
@@ -56,12 +56,15 @@ function log() {
 app.post('/openingHours', requestVerifier, function(req, res) {
 
   if (req.body.request.type === 'LaunchRequest') {
-    res.json(getOpeningHours());
-    isFirstTime = false
+    var speechOutput = 'Willkommen bei Silvana Öffnungszeiten!<break time="0.3s" />'
+    res.json(buildResponseWithRepromt(speechOutput, false, '', HELP_REPROMPT));
   } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
     log("Session End")
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
+      case 'GetAllOpeningHours':
+        res.json(getOpeningHours());
+        break;
       case 'AMAZON.NoIntent':
         res.json(getOpeningHours());
         break;
@@ -98,21 +101,18 @@ function help() {
 
 function getOpeningHours() {
 
-  var welcomeSpeechOutput = 'Willkomen bei Silvana Öffnungszeiten<break time="0.3s" />'
-  if (!isFirstTime) {
-    welcomeSpeechOutput = '';
-  }
 
-  const heroArr = data;
+
+  const openings = data;
   const heute = new Date();
-  const heroIndex = heute.getDay();
-  const randomHero = heroArr[heroIndex];
-  const tempOutput = WHISPER + GET_OH_MESSAGE + randomHero + PAUSE;
-  const speechOutput = welcomeSpeechOutput + tempOutput + MORE_MESSAGE
+  const openingIndex = heute.getDay();
+  const day = openings[openingIndex];
+  const tempOutput = WHISPER + GET_OH_MESSAGE + day + PAUSE;
+  const speechOutput = tempOutput + MORE_MESSAGE
   const more = MORE_MESSAGE
 
 
-  return buildResponseWithRepromt(speechOutput, false, randomHero, more);
+  return buildResponseWithRepromt(speechOutput, false, day, more);
 
 }
 
