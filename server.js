@@ -56,8 +56,8 @@ function log() {
 app.post('/openingHours', requestVerifier, function(req, res) {
 
   if (req.body.request.type === 'LaunchRequest') {
-    var speechOutput = 'Willkommen bei Silvana Öffnungszeiten!<break time="0.3s" />'
-    res.json(buildResponseWithRepromt(speechOutput, false, '', HELP_REPROMPT));
+    var speechOutput = 'Willkommen bei Silvana Öffnungszeiten! <break time="0.3s" />' + HELP_REPROMPT;
+    res.json(buildResponseWithRepromt(speechOutput, false, '', ''));
   } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
     log("Session End")
   } else if (req.body.request.type === 'IntentRequest') {
