@@ -62,10 +62,10 @@ app.post('/openingHours', requestVerifier, function(req, res) {
     log("Session End")
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
-      case 'AMAZON.YesIntent':
+      case 'AMAZON.NoIntent':
         res.json(getOpeningHours());
         break;
-      case 'AMAZON.NoIntent':
+      case 'AMAZON.YesIntent':
         res.json(stopAndExit());
         break;
       case 'AMAZON.HelpIntent':
